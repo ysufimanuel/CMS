@@ -1,8 +1,10 @@
-/**
- * Church Management System V5
- * Complete JavaScript Application with Role-Based Access Control
- * Features: Multi-language, Export formats, Privacy controls, Enhanced volunteer management
- */
+const db = window.db;
+const auth = window.auth;
+const DB_COLLECTIONS = window.DB_COLLECTIONS;
+
+// Pastikan app.js menunggu Firebase siap
+console.log('[APP] Menghubungkan ke Firebase...');
+
 
 // ========================================
 // LANGUAGE SYSTEM
@@ -1185,8 +1187,8 @@ async function login(username, password) {
     
     // Fallback to localStorage
     const data = getData();
-    const user = data.users.find(u => u.username === username && u.password === password);
-    
+    const user = await window.loginWithFirebase(username, password);
+
     if (user) {
         currentUser = user;
         sessionStorage.setItem('currentUser', JSON.stringify(user));
@@ -1283,8 +1285,8 @@ function togglePassword() {
     }
 }
 
-// Login form handler
-document.addEventListener('DOMContentLoaded', async function() {
+//ogin Form Handler Login
+
     // Initialize data (Firebase or localStorage)
     await initDataCache();
     applyLanguage();
@@ -2980,8 +2982,7 @@ function viewMemberDetail(id) {
 }
 
 async function deleteMember(id) {
-    if (isViewOnly()) {
-        showToast(currentLanguage === 'id' ? 'Anda tidak memiliki izin untuk menghapus data' : 'You do not have permission to delete data', 'error');
+    if (isViewOnly()) showToast(currentLanguage === 'id' ? 'Anda tidak memiliki izin untuk menghapus data' : 'You do not have permission to delete data', 'error');
         return;
     }
     
@@ -6516,3 +6517,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 });
+
+window.showSection = showSection; 
+window.handleLogin = handleLogin;
+window.logout = logout;
+window.showSection = showSection;
+window.toggleSidebar = toggleSidebar;
+window.changeLanguage = changeLanguage;
+window.closeModal = closeModal;
+window.openModal = openModal;
+
